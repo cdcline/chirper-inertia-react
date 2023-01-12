@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreChirpRequest;
 use App\Models\Chirp;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,15 +34,12 @@ class ChirpController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreChirpRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreChirpRequest $request)
     {
-         $validated = $request->validate([
-            'message' => 'required|string|max:255',
-         ]);
-
+         $validated = $request->validated();
          $request->user()->chirps()->create($validated);
 
          return redirect(route('chirps.index'));
@@ -72,18 +70,15 @@ class ChirpController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreChirpRequest  $request
      * @param  \App\Models\Chirp  $chirp
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Chirp $chirp)
+    public function update(StoreChirpRequest $request, Chirp $chirp)
     {
         $this->authorize('update', $chirp);
 
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
-        ]);
-
+        $validated = $request->validated();
         $chirp->update($validated);
 
         return redirect(route('chirps.index'));
